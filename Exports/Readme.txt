@@ -1,0 +1,1 @@
+This folder will save all the exports from maya temporarily until they are forwarded to UE

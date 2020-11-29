@@ -1,0 +1,2 @@
+UE4Editor-Cmd.exe =E:\Epic Games\UE_4.25\Engine\Binaries\Win64\UE4Editor-Cmd.exe
+Project Path =C:\Users\Konain\Documents\Unreal Projects\Headless\Headless.uproject
