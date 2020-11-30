@@ -1,14 +1,19 @@
 import unreal
 import os
 
-def importAsset():
-    model = []
-    modelnames = os.listdir(os.path.dirname(__file__).replace("\\", "/") + "/Exports")
-    for item in modelnames:
-        model.append(os.path.dirname(__file__).replace("\\", "/") + '/Exports/' + item)
-    tasks = []
-    count = 0
     
+def setupAsset():
+    model = []
+    modelnames = os.listdir(os.path.dirname(__file__).replace("\\", "/") + "/tempExports")
+    for item in modelnames:
+        model.append(os.path.dirname(__file__).replace("\\", "/") + '/tempExports/' + item)
+    
+    importAsset(model)
+    
+def importAsset(model):
+    count = 0
+    tasks = []
+
     while count < len(model):
         modeltask = buildImportTask(model[count],'/Game/MayaToUnreal')
         tasks.append(modeltask)
@@ -28,17 +33,10 @@ def buildImportTask(filename,destination):
 
 def executeTasks(tasks):
     unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks(tasks)
-    deleteTempAssets()
     
-def deleteTempAssets():
-    folder = os.path.dirname(__file__).replace("\\", "/") + '/Exports'
-    
-    myfiles = os.listdir(folder)
-    for file in myfiles:
-        os.unlink(folder+ '/' + file)
 
 if __name__ == "__main__":
-    importAsset()
+    setupAsset()
 
 
 
