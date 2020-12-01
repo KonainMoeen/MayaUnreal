@@ -3,7 +3,7 @@ import MayaInterface
 
 
 def initPlugin():
-    MayaInterface.createShelf()
+    MayaInterface.CreateShelf()
     print("Maya To Unreal Started")
     
 

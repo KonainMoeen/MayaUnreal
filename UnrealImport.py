@@ -2,7 +2,7 @@ import unreal
 import os
 
     
-def setupAsset():
+def SetupAsset():
     model = []
     modelnames = os.listdir(os.path.dirname(__file__).replace("\\", "/") + "/tempExports")
     for item in modelnames:
@@ -36,7 +36,7 @@ def executeTasks(tasks):
     
 
 if __name__ == "__main__":
-    setupAsset()
+    SetupAsset()
 
 
 
