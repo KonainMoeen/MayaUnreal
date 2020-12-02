@@ -59,12 +59,12 @@ def DeleteTempAssets():
 # Exports the temporary assets in tempExports folder 
 def ExportTempAssets():
     import maya.cmds as cmds
-
+    from MayaInterface import getPrefix
     selected = cmds.ls(sl=1,sn=True)
 
     for item in selected:
         cmds.select(item)
-        cmds.file(path + "/tempExports/" + item +".fbx" ,pr=1,typ="FBX export",es=1, op="groups=0; ptgroups=0; materials=0; smoothing=1; normals=1")
+        cmds.file(path + "/tempExports/" + getPrefix() + item +".fbx" ,pr=1,typ="FBX export",es=1, op="groups=0; ptgroups=0; materials=0; smoothing=1; normals=1")
 
     cmds.select(selected)
     
