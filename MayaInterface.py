@@ -12,7 +12,8 @@ import Initiator
 ueTextField = ''
 projectTextField = ''
 cmd_path = ''
-project_path=''
+project_path= ''
+content_path= ''
 #This generates the shelf button
 def CreateShelf():
     path_ = os.path.dirname(__file__).replace("\\", "/")
@@ -62,7 +63,7 @@ def openPathSelection(*args):
 
 #This is the Menu that is shown in Maya on button click
 def MayaToUnrealMenu():
-    global ueTextField, projectTextField, cmd_path, project_path
+    global ueTextField, projectTextField, cmd_path, project_path, content_path
     pathInFile = Initiator.FetchPath()
     
     
@@ -70,28 +71,37 @@ def MayaToUnrealMenu():
     cmds.rowColumnLayout( numberOfColumns=3, columnAttach=(1, 'both', 0), columnWidth=[(1, 110), (2, 180)], adjustableColumn=2 )
     cmds.text( label='Unreal Editor Cmd : ')
     ueTextField = cmds.textField(w=200)
-    cmd_pathbtn = cmds.button(l='::', align='right', width=25, command =btnCmdPath)
+    cmd_pathbtn = cmds.button(l=': :', align='right', width=25, command =btnCmdPath)
 
     cmds.text( label='Unreal Project : '  )
     projectTextField = cmds.textField(w=200)
-    project_pathbtn = cmds.button(l='::', align='right', width=25, command =btnProjectPath)
+    project_pathbtn = cmds.button(l=': :', align='right', width=25, command =btnProjectPath)
 
 
     cmd_path = cmds.textField( ueTextField, edit=True, enterCommand=('cmds.setFocus(\"' + ueTextField + '\")'), tx=pathInFile[0] )
     project_path = cmds.textField( projectTextField, edit=True, enterCommand=('cmds.setFocus(\"' + projectTextField + '\")'), tx=pathInFile[1] )
-    cmds.text('')
+    
+    #Assets path UI
+    cmds.text(label='Content Location : ')
+    contentTextField = cmds.textField(w=200)
+
+    content_path = cmds.textField( contentTextField, edit=True, enterCommand=('cmds.setFocus(\"' + contentTextField + '\")'), tx=pathInFile[2] )
+    
+    
+    __temp1 = cmds.text('')
+    __temp2 = cmds.text(' ')
     cmds.button(l='Export to Unreal',width=100, command=btnExecute)
     
     cmds.showWindow( Window )
     
 # This is the main workflow
 def StartExportProcess(*args):
+    saveContentPath()
     Initiator.SendPaths(args[0], args[1])
     Initiator.DeleteTempAssets()
     Initiator.ExportTempAssets()
     Initiator.Execute()
-    
-    
+        
 def btnExecute(*args):
     StartExportProcess(cmds.textField(cmd_path, q=1, text=1),cmds.textField(project_path, q=1, text=1))
     
@@ -101,6 +111,11 @@ def btnProjectPath(*args):
 def btnCmdPath(*args):
     openPathSelection(0)    
     
+    
+def saveContentPath():
+    Initiator.savePathInFile("Content Path =" + cmds.textField(content_path, q=1, text=1), 2)
+
+
 # def DeleteMayaOldShelf(shelfName = "MayaToUnreal"):
 #     try:
 #         shelfExists = cmds.shelfLayout(shelfName, ex=True)

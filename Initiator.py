@@ -7,15 +7,13 @@ PROJECT =r""
     
 # Fetches the path from PathFile
 def FetchPath():
-    pathInFile=['','']
+    pathInFile=['','','']
     try:
         with open(FILE, "r") as f:
             lines = f.readlines()
             pathInFile[0] = lines[0].split("=",1)[-1].strip()
             pathInFile[1] = lines[1].split("=",1)[-1].strip()
-            # r'{}'.format(pathInFile[0]).replace("\\", "/")
-            # r'{}'.format(pathInFile[1]).replace("\\", "/")
-
+            pathInFile[2] = lines[2].split("=",1)[-1].strip()
             print(pathInFile)
         return pathInFile
     except:
