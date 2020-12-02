@@ -9,9 +9,7 @@ import os
 import Initiator
 
 
-ueTextField = ''
 projectTextField = ''
-cmd_path = ''
 project_path= ''
 content_path= ''
 prefix = ''
@@ -52,49 +50,36 @@ def openPathSelection(*args):
     path = mel.eval('fileDialog -m 0 -t ""')
     if path == '':
         return
-    
-    if(args[0] == 0):
-        cmd_path = cmds.textField( ueTextField, edit=True, tx=path )
-        Initiator.savePathInFile("UE4Editor-Cmd.exe =" + cmds.textField(cmd_path, q=1, text=1)  + '\n', args[0])
 
-    elif(args[0] == 1):
+    elif(args[0] == 0):
         project_path = cmds.textField( projectTextField, edit=True, tx=path )
         Initiator.savePathInFile("Project Path =" + cmds.textField(project_path, q=1, text=1), args[0])
 
 
 #This is the Menu that is shown in Maya on button click
 def MayaToUnrealMenu():
-    global ueTextField, projectTextField, cmd_path, project_path, content_path, prefix
+    global projectTextField, cmd_path, project_path, content_path, prefix
     pathInFile = Initiator.FetchPath()
     
     
     Window = cmds.window('Maya to Unreal',mnb = False, mxb = False)
     #Main Layout
     cmds.columnLayout(bgc=(0.878, 0.874, 0.890),adjustableColumn=1 )
-    # CMD ROW
-    cmds.rowColumnLayout( numberOfColumns=3, columnAttach=(1, 'right', 0), columnWidth=[(1, 110), (2, 400), (3, 25)], adjustableColumn=2 , bgc=(0.878, 0.874, 0.890))
-   
-    # UE Command UI
-    cmds.text( label='Unreal Editor Cmd : ')
-    ueTextField = cmds.textField(w=200)
-    cmd_pathbtn = cmds.button(l=': :', align='right', width=25, bgc=(0.1,0.1,0.1), command =btnCmdPath)
-    cmd_path = cmds.textField( ueTextField, edit=True, enterCommand=('cmds.setFocus(\"' + ueTextField + '\")'), tx=pathInFile[0] )
 
     #PROJECT ROW
-    cmds.setParent('..')
-    cmds.rowColumnLayout( numberOfColumns=3, columnAttach=(1, 'right', 0), columnWidth=[(1, 110), (2, 400), (3, 25)], adjustableColumn=2 , bgc=(0.878, 0.874, 0.890))
+    cmds.rowColumnLayout( numberOfColumns=3, columnAttach=(1, 'left', 0), columnWidth=[(1, 100), (2, 400), (3, 25)], adjustableColumn=2 , bgc=(0.878, 0.874, 0.890))
 
     # Project UI
-    cmds.text( label='Unreal Project : '  )
+    cmds.text( label=' Unreal Project : '  )
     projectTextField = cmds.textField(w=200)
     project_pathbtn = cmds.button(l=': :', align='right', width=25, bgc=(0.1,0.1,0.1), command =btnProjectPath)
     project_path = cmds.textField( projectTextField, edit=True, enterCommand=('cmds.setFocus(\"' + projectTextField + '\")'), tx=pathInFile[1] )
     
     cmds.setParent('..')
-    cmds.rowColumnLayout(numberOfColumns=5, columnAttach=(1, 'right', 0), columnWidth=[(1, 110), (2, 145),(3,110),(4,145),(5, 25)],bgc=(0.878, 0.874, 0.890),adjustableColumn=2)
+    cmds.rowColumnLayout(numberOfColumns=5, columnAttach=(1, 'left', 0), columnWidth=[(1, 100), (2, 145),(3,110),(4,145),(5, 25)],bgc=(0.878, 0.874, 0.890),adjustableColumn=2)
     
     # Assets path UI
-    cmds.text(label='Content Location : ')
+    cmds.text(label=' Content Location : ')
     contentTextField = cmds.textField(w=145)
     content_path = cmds.textField( contentTextField, edit=True, enterCommand=('cmds.setFocus(\"' + contentTextField + '\")'), tx=pathInFile[2] )
     
@@ -117,19 +102,16 @@ def MayaToUnrealMenu():
 # This is the main workflow
 def StartExportProcess(*args):
     saveContentPath()
-    Initiator.SendPaths(args[0], args[1])
+    Initiator.SendPaths(args[0])
     Initiator.DeleteTempAssets()
     Initiator.ExportTempAssets()
     Initiator.Execute()
         
 def btnExecute(*args):
-    StartExportProcess(cmds.textField(cmd_path, q=1, text=1),cmds.textField(project_path, q=1, text=1))
+    StartExportProcess(cmds.textField(project_path, q=1, text=1))
     
 def btnProjectPath(*args):
-    openPathSelection(1)    
-    
-def btnCmdPath(*args):
-    openPathSelection(0)    
+    openPathSelection(0)      
     
     
 def saveContentPath():

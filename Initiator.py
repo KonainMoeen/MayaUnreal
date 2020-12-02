@@ -14,10 +14,9 @@ def FetchPath():
             pathInFile[0] = lines[0].split("=",1)[-1].strip()
             pathInFile[1] = lines[1].split("=",1)[-1].strip()
             pathInFile[2] = lines[2].split("=",1)[-1].strip()
-            print(pathInFile)
         return pathInFile
     except:
-        print("File Not Found or File is Missing Data")
+        print("Text File Not Found or File is Missing Data")
         return pathInFile
 
     
@@ -40,11 +39,11 @@ def Execute():
     #global PROJECT, UE_CMD
    
     if UE_CMD=="":
-        print("Path to Unreal Engine Cmd (UE4Editor-Cmd.exe) is missing.")
+        print("Unreal Path Error. Check README for more info")
         return
         
     if PROJECT=="":
-        print("Path to Unreal Project file (ProjectName.uproject) is missing.")
+        print("Path to Unreal Project file is missing. Check README for more info")
         return
         
     cmd = subprocess.Popen( r'"{}" "{}" -run=pythonscript -script={}/UnrealImport.py'.format(UE_CMD,PROJECT,os.path.dirname(__file__).replace("\\", "/")), shell= True)
@@ -69,8 +68,15 @@ def ExportTempAssets():
     cmds.select(selected)
     
 # Gets the path of Cmd and Project right: used right when the export button is clicked
-def SendPaths(CmdPath, ProjectPath):
+def SendPaths(ProjectPath):
+    from UnrealPath import GetUnrealCMD
+    path = GetUnrealCMD()
     global PROJECT, UE_CMD
-    UE_CMD = CmdPath
+
+    if UE_CMD == "":
+        if path:
+            savePathInFile("UE4Editor-Cmd.exe =" + path  + '\n',0)
+            UE_CMD = path
+
     PROJECT = ProjectPath
     
