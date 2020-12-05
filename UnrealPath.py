@@ -13,9 +13,15 @@ def findEpicFolder():
 
     return False
         
+
 def GetUnrealVersion(path):
+    from MayaInterface import getUnrealVersion
+    version = getUnrealVersion()
     for foldername in os.listdir(path):
-        if foldername.startswith('UE_'):
+        if foldername.startswith('UE_' + version):
+            print('Found Preferred Unreal Version')
+            return foldername
+        elif foldername.startswith('UE_'):
             return foldername
         
 def GetUnrealCMD():
