@@ -1,3 +1,7 @@
+"""
+Handles all the file handling and export/import process
+"""
+
 import os,subprocess, shutil
 
 path = os.path.dirname(__file__).replace("\\", "/")
@@ -58,7 +62,7 @@ def DeleteTempAssets():
 # Exports the temporary assets in tempExports folder 
 def ExportTempAssets():
     import maya.cmds as cmds
-    from MayaInterface import getAssetPrefix
+    from Interface import getAssetPrefix
     selected = cmds.ls(sl=1,sn=True)
 
     for item in selected:

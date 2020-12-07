@@ -1,9 +1,9 @@
 import pymel.core as pm
-import MayaInterface
+import Interface
 
 
 def initPlugin():
-    MayaInterface.CreateShelf()
+    Interface.CreateShelf()
     print("Maya To Unreal Started")
     
 

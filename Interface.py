@@ -1,7 +1,5 @@
 """
-This Module:
-- Adds the plugin to Maya (Creates a shelf and deletes the old shelf)
-
+Handles all the interface and the data received from the interface
 """
 import maya.cmds as cmds
 import maya.mel as mel
@@ -22,7 +20,7 @@ def CreateShelf():
     imgPath = os.path.join( path_, "Logo.png" ).replace("\\", "/")
     
     cmd_="""
-from MayaInterface import MayaToUnrealMenu
+from Interface import MayaToUnrealMenu
 MayaToUnrealMenu()
 """
     shelftoplevel = mel.eval("$gShelfTopLevel = $gShelfTopLevel;")
