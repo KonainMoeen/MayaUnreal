@@ -4,7 +4,7 @@ Handles all the interface and the data received from the interface
 import maya.cmds as cmds
 import maya.mel as mel
 import os
-import Initiator
+import Handler
 
 
 projectTextField = ''
@@ -52,21 +52,21 @@ def openPathSelection(*args):
 
     elif(args[0] == 1):
         project_path = cmds.textField( projectTextField, edit=True, tx=path )
-        Initiator.savePathInFile("Project Path =" + cmds.textField(project_path, q=1, text=1) + '\n', args[0])
+        Handler.savePathInFile("Project Path =" + cmds.textField(project_path, q=1, text=1) + '\n', args[0])
 
 
 #This is the Menu that is shown in Maya on button click
 def MayaToUnrealMenu():
     global projectTextField, cmd_path, project_path, content_path, prefix, version
-    pathInFile = Initiator.FetchPath()
+    pathInFile = Handler.FetchPath()
     
-    
+    version_text = pathInFile[0].split('UE_',1)[1][0:4]
     Window = cmds.window('Maya to Unreal',mnb = False, mxb = False)
     #Main Layout
     cmds.columnLayout(bgc=(0.878, 0.874, 0.890),adjustableColumn=1 )
 
     #PROJECT ROW
-    cmds.rowColumnLayout( numberOfColumns=3, columnAttach=(1, 'right', 6), columnWidth=[(1, 100), (2, 400), (3, 25)], adjustableColumn=2 , bgc=(0.878, 0.874, 0.890))
+    cmds.rowColumnLayout( numberOfColumns=3, columnAttach=(1, 'right', 6.5), columnWidth=[(1, 100), (2, 400), (3, 25)], adjustableColumn=2 , bgc=(0.878, 0.874, 0.890))
 
     # Project UI
     cmds.text( label=' *Unreal Project :'  )
@@ -86,7 +86,7 @@ def MayaToUnrealMenu():
     #unreal version
     cmds.text( label=' Unreal Version: ')
     versionTextField = cmds.textField(w=100)
-    version = cmds.textField( versionTextField, edit=True, enterCommand=('cmds.setFocus(\"' + contentTextField + '\")'), tx=pathInFile[0].split('UE_',1)[1][0:4] )    
+    version = cmds.textField( versionTextField, edit=True, enterCommand=('cmds.setFocus(\"' + contentTextField + '\")'), tx=version_text )    
     
     cmds.text(' ')
 
@@ -94,7 +94,7 @@ def MayaToUnrealMenu():
     cmds.rowColumnLayout(numberOfColumns=3,co=[(1,'both',0),(2,'both',0),(3,'both', 200)],columnWidth=[(1, 100),(2, 100),(3, 215)],adjustableColumn=2 ) 
     
     # Name Prefix UI
-    cmds.text( label='Asset Name Prefix : '  )
+    cmds.text( label=' Asset Name Prefix : '  )
     prefixTextField = cmds.textField(w=145)
     prefix = cmds.textField( prefixTextField, edit=True, enterCommand=('cmds.setFocus(\"' + contentTextField + '\")') )
     
@@ -110,10 +110,10 @@ def MayaToUnrealMenu():
 # This is the main workflow
 def StartExportProcess(*args):
     saveContentPath()
-    Initiator.SendPaths(args[0])
-    Initiator.DeleteTempAssets()
-    Initiator.ExportTempAssets()
-    Initiator.Execute()
+    Handler.SendPaths(args[0])
+    Handler.DeleteTempAssets()
+    Handler.ExportTempAssets()
+    Handler.Execute()
         
 def btnExecute(*args):
     StartExportProcess(cmds.textField(project_path, q=1, text=1))
@@ -123,7 +123,7 @@ def btnProjectPath(*args):
     
     
 def saveContentPath():
-    Initiator.savePathInFile("Content Path =" + cmds.textField(content_path, q=1, text=1), 2)
+    Handler.savePathInFile("Content Path =" + cmds.textField(content_path, q=1, text=1), 2)
 
 def getAssetPrefix():
     return cmds.textField(prefix, q=1, text=1)

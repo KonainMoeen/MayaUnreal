@@ -76,11 +76,10 @@ def SendPaths(ProjectPath):
     from UnrealPath import GetUnrealCMD
     path = GetUnrealCMD()
     global PROJECT, UE_CMD
-
-    if UE_CMD == "":
-        if path:
-            savePathInFile("UE4Editor-Cmd.exe =" + path  + '\n',0)
-            UE_CMD = path
+    
+    if path:
+        savePathInFile("UE4Editor-Cmd.exe =" + path + '\n', 0)
+        UE_CMD = path
 
     PROJECT = ProjectPath
     

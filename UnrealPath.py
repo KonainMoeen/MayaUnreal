@@ -21,12 +21,11 @@ def findEpicFolder():
 def GetUnrealVersion(path):
     from Interface import getUnrealVersion
     version = getUnrealVersion()
-    print(version)
     for foldername in os.listdir(path):
-        if foldername.startswith('UE_' + version):
-            print('Found Preferred Unreal Version')
+        if foldername.endswith(version):
             return foldername
-        elif foldername.startswith('UE_'):
+    for foldername in os.listdir(path):   
+        if foldername.startswith('UE_'):
             return foldername
         
 def GetUnrealCMD():
@@ -34,7 +33,6 @@ def GetUnrealCMD():
     if findEpicFolder():
         path = findEpicFolder()
         path = path + GetUnrealVersion(path) +'/Engine/Binaries/Win64/UE4Editor-Cmd.exe'
-         
         return path
     else:
         return False
