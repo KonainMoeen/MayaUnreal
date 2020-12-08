@@ -4,7 +4,7 @@ Get unreal commandline path
 
 import os
 
-def findEpicFolder():
+def FindEpicFolder():
     basePath = 'C:/Program Files'
     drives = [ chr(x) + ":/" for x in range(65,91) if os.path.exists(chr(x) + ":") ]
     
@@ -19,20 +19,28 @@ def findEpicFolder():
         
 
 def GetUnrealVersion(path):
-    from Interface import getUnrealVersion
-    version = getUnrealVersion()
-    for foldername in os.listdir(path):
-        if foldername.endswith(version):
-            return foldername
+    from Handler import FindUnrealProjectVersion
+    version = FindUnrealProjectVersion()
+    backupversion = ''
     for foldername in os.listdir(path):   
-        if foldername.startswith('UE_'):
-            return foldername
-        
+            if foldername == 'UE_'+ version:
+                return foldername
+            elif foldername.startswith('UE_'):
+                backupversion = foldername
+    if backupversion:
+        print("Project Version is different from installed Unreal Version")
+        return backupversion
+    else:
+        return False
+
 def GetUnrealCMD():
     path = ''
-    if findEpicFolder():
-        path = findEpicFolder()
-        path = path + GetUnrealVersion(path) +'/Engine/Binaries/Win64/UE4Editor-Cmd.exe'
-        return path
+    if FindEpicFolder():
+        path = FindEpicFolder()
+        if GetUnrealVersion(path):
+            path = path + GetUnrealVersion(path) +'/Engine/Binaries/Win64/UE4Editor-Cmd.exe'
+            return path
+        else:
+            return False
     else:
         return False

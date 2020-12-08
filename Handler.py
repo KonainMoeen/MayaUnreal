@@ -73,13 +73,52 @@ def ExportTempAssets():
     
 # Gets the path of Cmd and Project right: used right when the export button is clicked
 def SendPaths(ProjectPath):
+    global PROJECT, UE_CMD
+    
+    PROJECT = ProjectPath
+
     from UnrealPath import GetUnrealCMD
     path = GetUnrealCMD()
-    global PROJECT, UE_CMD
     
     if path:
         savePathInFile("UE4Editor-Cmd.exe =" + path + '\n', 0)
         UE_CMD = path
 
-    PROJECT = ProjectPath
     
+def FindUnrealProjectVersion():
+    file = PROJECT
+    lines = []
+    version = ""
+
+    fin = open(file, 'r')
+    lines = fin.readlines()
+    fin.close()
+    
+    for line in lines:
+        if line.lstrip().startswith("\"EngineAssociation"):
+            version = line.split(':')[1].strip()
+        
+    return version[1:5]
+
+
+def EnablePythonPlugin():
+    import json
+    file = PROJECT
+    plugindata = {
+    'Name': 'PythonScriptPlugin', 
+    'Enabled': True
+    }
+    with open(file) as json_file: 
+        data = json.load(json_file) 
+        
+        if 'Plugins' in data.keys():
+            for item in data['Plugins']:
+                if item['Name'] == 'PythonScriptPlugin':
+                    return
+        else:
+            data['Plugins'] = []
+
+        data['Plugins'].append(plugindata) 
+        
+    with open(file,'w') as f: 
+        json.dump(data, f, indent=4) 

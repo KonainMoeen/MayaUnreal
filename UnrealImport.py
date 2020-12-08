@@ -42,8 +42,6 @@ def getContentPath():
     try:
         with open(os.path.dirname(__file__).replace("\\", "/") + "/PathFile.txt", "r") as f:
             lines = f.readlines()
-            #pathInFile[0] = lines[0].split("=",1)[-1].strip()
-            #pathInFile[1] = lines[1].split("=",1)[-1].strip()
             pathInFile[2] = lines[2].split("=",1)[-1].strip()
         return pathInFile[2].replace("\\", "/")
     except:
