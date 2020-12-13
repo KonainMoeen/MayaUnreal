@@ -1,3 +1,0 @@
-UE4Editor-Cmd.exe =
-Project Path =
-Content Path =

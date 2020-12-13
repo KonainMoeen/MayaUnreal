@@ -2,10 +2,10 @@
 Handles all the file handling and export/import process
 """
 
-import os,subprocess, shutil
+import os,subprocess
 
-path = os.path.dirname(__file__).replace("\\", "/")
-FILE = path + "/PathFile.txt"
+backendpath = 'C:/UnrealPlugin'
+FILE = backendpath + "/PathFile.txt"
 UE_CMD =r""
 PROJECT =r""
     
@@ -50,11 +50,11 @@ def Execute():
         print("Path to Unreal Project file is missing. Check README for more info")
         return
         
-    cmd = subprocess.Popen( r'"{}" "{}" -run=pythonscript -script={}/UnrealImport.py'.format(UE_CMD,PROJECT,os.path.dirname(__file__).replace("\\", "/")), shell= True)
+    cmd = subprocess.Popen( r'"{}" "{}" -run=pythonscript -script={}/UnrealImport.py'.format(UE_CMD,PROJECT,backendpath), shell= True)
     
 # Deletes the temporary assets in tempExports folder
 def DeleteTempAssets():
-    folder = os.path.dirname(__file__).replace("\\", "/") + '/tempExports'
+    folder = backendpath + '/tempExports'
     myfiles = os.listdir(folder)
     for file in myfiles:
             os.unlink(folder+ '/' + file)    
@@ -67,7 +67,7 @@ def ExportTempAssets():
 
     for item in selected:
         cmds.select(item)
-        cmds.file(path + "/tempExports/" + getAssetPrefix() + item +".fbx" ,pr=1,typ="FBX export",es=1, op="groups=0; ptgroups=0; materials=0; smoothing=1; normals=1")
+        cmds.file(backendpath + "/tempExports/" + getAssetPrefix() + item +".fbx" ,pr=1,typ="FBX export",es=1, op="groups=0; ptgroups=0; materials=0; smoothing=1; normals=1")
 
     cmds.select(selected)
     
@@ -78,11 +78,11 @@ def SendPaths(ProjectPath):
     PROJECT = ProjectPath
 
     from UnrealPath import GetUnrealCMD
-    path = GetUnrealCMD()
+    upath = GetUnrealCMD()
     
-    if path:
-        savePathInFile("UE4Editor-Cmd.exe =" + path + '\n', 0)
-        UE_CMD = path
+    if upath:
+        savePathInFile("UE4Editor-Cmd.exe =" + upath + '\n', 0)
+        UE_CMD = upath
 
     
 def FindUnrealProjectVersion():
