@@ -2,12 +2,12 @@ import pymel.core as pm
 import Interface
 
 
+pm.evalDeferred("initPlugin()")
+
 def initPlugin():
     Interface.CreateShelf()
-    print("Maya To Unreal Started")
     
 
-pm.evalDeferred("initPlugin()")
 
 
     

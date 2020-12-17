@@ -14,7 +14,6 @@ prefix = ''
 #This generates the shelf button
 def CreateShelf():
     path_ = os.path.dirname(__file__).replace("\\", "/")
-    print(path_)
     shelfName_ = "MayaToUnreal"
     imgPath = os.path.join( path_, "Logo.png" ).replace("\\", "/")
     
@@ -25,10 +24,10 @@ MayaToUnrealMenu()
     shelftoplevel = mel.eval("$gShelfTopLevel = $gShelfTopLevel;")
     shelfList_ = cmds.tabLayout(shelftoplevel, query=True, childArray=True)
 
-    # try:
-    #     DeleteMayaOldShelf()
-    # except:
-    #     pass
+    try:
+        DeleteMayaOldShelf()
+    except:
+        pass
 
     if shelftoplevel != None:
         if shelfName_ in shelfList_:
@@ -43,6 +42,20 @@ MayaToUnrealMenu()
         cmds.shelfButton( label="Push", command=cmd_, parent=shelfName_, image=imgPath)
         cmds.saveAllShelves(shelftoplevel)
         
+        
+
+def DeleteMayaOldShelf(shelfName = "MayaToUnreal"):
+    try:
+        shelfExists = cmds.shelfLayout(shelfName, ex=True)
+        if shelfExists:
+            mel.eval('deleteShelfTab {}'.format(shelfName))
+            gShelfTopLevel = mel.eval('$tmpVar=$gShelfTopLevel')
+            cmds.saveAllShelves(gShelfTopLevel)
+        else:
+            return
+    except:
+        pass
+    
 #This is a helper function for changing the text in the textfield of menu when the user selects a file using the menu button
 def openPathSelection(*args):
     path = mel.eval('fileDialog -m 0 -t ""')
@@ -114,18 +127,3 @@ def saveContentPath():
 
 def getAssetPrefix():
     return cmds.textField(prefix, q=1, text=1)
-
-
-
-# def DeleteMayaOldShelf(shelfName = "MayaToUnreal"):
-#     try:
-#         shelfExists = cmds.shelfLayout(shelfName, ex=True)
-#         if shelfExists:
-#             mel.eval('deleteShelfTab %s' % shelfName)
-#             gShelfTopLevel = mel.eval('$tmpVar=$gShelfTopLevel')
-#             cmds.saveAllShelves(gShelfTopLevel)
-#         else:
-#             return
-#     except:
-#         pass
-    
